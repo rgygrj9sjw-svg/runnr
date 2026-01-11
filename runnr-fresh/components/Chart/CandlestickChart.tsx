@@ -39,7 +39,6 @@ export function CandlestickChart({ data, loading }: ChartProps) {
   const volumeSeriesRef = useRef<ISeriesApi<'Histogram'> | null>(null)
   const [crosshair, setCrosshair] = useState<Candle | null>(null)
 
-  // Initialize chart
   useEffect(() => {
     if (!containerRef.current) return
 
@@ -66,14 +65,10 @@ export function CandlestickChart({ data, loading }: ChartProps) {
         timeVisible: true,
         secondsVisible: false,
       },
-      localization: {
-        priceFormatter: formatPrice,
-      },
     })
 
     chartRef.current = chart
 
-    // Candle series
     const candleSeries = chart.addCandlestickSeries({
       upColor: '#22c55e',
       downColor: '#ef4444',
@@ -83,26 +78,27 @@ export function CandlestickChart({ data, loading }: ChartProps) {
     })
     candleSeriesRef.current = candleSeries
 
-    // Volume series
     const volumeSeries = chart.addHistogramSeries({
       color: '#6366f1',
       priceFormat: { type: 'volume' },
-      priceScaleId: '',
+      priceScaleId: 'volume',
+    })
+
+    chart.priceScale('volume').applyOptions({
       scaleMargins: { top: 0.8, bottom: 0 },
     })
+
     volumeSeriesRef.current = volumeSeries
 
-    // Crosshair move handler
     chart.subscribeCrosshairMove((param) => {
       if (param.time) {
-        const data = param.seriesData.get(candleSeries) as Candle
-        if (data) setCrosshair(data)
+        const candle = param.seriesData.get(candleSeries) as Candle
+        if (candle) setCrosshair(candle)
       } else {
         setCrosshair(null)
       }
     })
 
-    // Resize handler
     const resize = () => chart.applyOptions({ width: containerRef.current?.clientWidth })
     window.addEventListener('resize', resize)
 
@@ -112,29 +108,25 @@ export function CandlestickChart({ data, loading }: ChartProps) {
     }
   }, [])
 
-  // Update data
   useEffect(() => {
     if (!data?.candles || !candleSeriesRef.current || !volumeSeriesRef.current) return
 
-    const candles = data.candles
-    candleSeriesRef.current.setData(candles)
-    volumeSeriesRef.current.setData(candles.map(c => ({
-      time: c.time,
+    candleSeriesRef.current.setData(data.candles as any)
+    volumeSeriesRef.current.setData(data.candles.map(c => ({
+      time: c.time as any,
       value: c.volume,
       color: c.close > c.open ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)',
     })))
 
-    // Auto fit
     chartRef.current?.timeScale().fitContent()
   }, [data])
 
-  const display = crosshair || data?.candles[data.candles.length - 1]
+  const display = crosshair || data?.candles?.[data.candles.length - 1]
   const change = display ? display.close - display.open : 0
-  const changePct = display ? (change / display.open) * 100 : 0
+  const changePct = display && display.open ? (change / display.open) * 100 : 0
 
   return (
     <div className="h-full flex flex-col">
-      {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-runnr-border text-sm">
         <div className="flex items-center gap-3">
           <span className="font-semibold">{data?.symbol || 'No symbol'}</span>
@@ -171,7 +163,6 @@ export function CandlestickChart({ data, loading }: ChartProps) {
         )}
       </div>
 
-      {/* Chart */}
       <div ref={containerRef} className="flex-1 relative">
         {!data && !loading && (
           <div className="absolute inset-0 flex items-center justify-center text-gray-500">
