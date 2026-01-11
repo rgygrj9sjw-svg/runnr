@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { createChart, CrosshairMode, IChartApi, ISeriesApi } from 'lightweight-charts'
+import { createChart, ColorType, CrosshairMode, IChartApi, ISeriesApi } from 'lightweight-charts'
 
 interface Candle {
   time: number
@@ -45,7 +45,7 @@ export function CandlestickChart({ data, loading }: ChartProps) {
 
     const chart = createChart(containerRef.current, {
       layout: {
-        background: { type: 'solid', color: '#0a0a0f' },
+        background: { type: ColorType.Solid, color: '#0a0a0f' },
         textColor: '#9ca3af',
       },
       grid: {
