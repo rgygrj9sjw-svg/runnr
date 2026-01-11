@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { createChart, ColorType, CrosshairMode, LineStyle, IChartApi, ISeriesApi } from 'lightweight-charts'
+import { createChart, ColorType, CrosshairMode, IChartApi, ISeriesApi } from 'lightweight-charts'
 
 interface Candle {
   time: number
@@ -53,12 +53,9 @@ export function CandlestickChart({ data, loading }: ChartProps) {
       },
       crosshair: {
         mode: CrosshairMode.Normal,
-        vertLine: { color: '#6366f1', width: 1, style: LineStyle.Dashed, labelBackgroundColor: '#6366f1' },
-        horzLine: { color: '#6366f1', width: 1, style: LineStyle.Dashed, labelBackgroundColor: '#6366f1' },
       },
       rightPriceScale: {
         borderColor: '#1e1e2e',
-        scaleMargins: { top: 0.1, bottom: 0.2 },
       },
       timeScale: {
         borderColor: '#1e1e2e',
@@ -83,12 +80,11 @@ export function CandlestickChart({ data, loading }: ChartProps) {
       priceFormat: { type: 'volume' },
       priceScaleId: 'volume',
     })
+    volumeSeriesRef.current = volumeSeries
 
     chart.priceScale('volume').applyOptions({
       scaleMargins: { top: 0.8, bottom: 0 },
     })
-
-    volumeSeriesRef.current = volumeSeries
 
     chart.subscribeCrosshairMove((param) => {
       if (param.time) {
