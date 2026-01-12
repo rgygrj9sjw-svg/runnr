@@ -8,6 +8,7 @@ import { Sidebar } from '@/components/Layout/Sidebar'
 import { CandlestickChart } from '@/components/Chart/CandlestickChart'
 import { TimeframeSelector } from '@/components/Chart/TimeframeSelector'
 import { ChatPanel } from '@/components/Chat/ChatPanel'
+import { ScannerPanel } from '@/components/Scanner/ScannerPanel'
 
 export default function Home() {
   const { symbol, timeframe, activeTab, setTimeframe } = useStore()
@@ -74,12 +75,7 @@ export default function Home() {
           )}
 
           {activeTab === 'scanner' && (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <h2 className="text-xl font-semibold mb-2">Stock Scanner</h2>
-                <p className="text-gray-500">Coming soon in v2</p>
-              </div>
-            </div>
+            <ScannerPanel />
           )}
 
           {activeTab === 'journal' && (
