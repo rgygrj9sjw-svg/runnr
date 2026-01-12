@@ -30,6 +30,9 @@ interface AppState {
 }
 
 const defaultWatchlist: WatchlistItem[] = [
+  { symbol: 'SPX', name: 'S&P 500 Index' },
+  { symbol: 'NDX', name: 'Nasdaq 100' },
+  { symbol: 'BTC', name: 'Bitcoin' },
   { symbol: 'AAPL', name: 'Apple Inc.' },
   { symbol: 'MSFT', name: 'Microsoft' },
   { symbol: 'GOOGL', name: 'Alphabet' },
@@ -38,6 +41,7 @@ const defaultWatchlist: WatchlistItem[] = [
   { symbol: 'TSLA', name: 'Tesla' },
   { symbol: 'META', name: 'Meta' },
   { symbol: 'SPY', name: 'S&P 500 ETF' },
+  { symbol: 'QQQ', name: 'Nasdaq 100 ETF' },
 ]
 
 export const useStore = create<AppState>()(

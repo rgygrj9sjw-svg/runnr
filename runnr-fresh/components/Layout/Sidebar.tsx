@@ -10,7 +10,7 @@ interface Quote {
 }
 
 export function Sidebar() {
-  const { symbol, watchlist, setSymbol, removeFromWatchlist } = useStore()
+  const { symbol, watchlist, activeTab, setSymbol, removeFromWatchlist } = useStore()
   const [quotes, setQuotes] = useState<Record<string, Quote>>({})
 
   // Fetch quotes (staggered to avoid rate limits)
@@ -48,6 +48,32 @@ export function Sidebar() {
 
       {/* List */}
       <div className="flex-1 overflow-auto">
+        {activeTab === 'scanner' && (
+          <div className="p-3 space-y-3 text-xs text-gray-400">
+            <div className="rounded-lg border border-runnr-border bg-runnr-card p-3">
+              <p className="text-xs uppercase tracking-wide text-gray-500">Scanner Preset</p>
+              <p className="text-sm font-semibold text-white mt-1">Atlas Liquidity Prime</p>
+              <p className="text-xs text-gray-500 mt-1">145 symbols · realtime</p>
+            </div>
+            <div className="rounded-lg border border-runnr-border bg-runnr-card p-3">
+              <p className="text-xs uppercase tracking-wide text-gray-500">Risk Filters</p>
+              <div className="mt-2 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span>Float</span>
+                  <span className="text-white">&lt; 350M</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Spread</span>
+                  <span className="text-white">&lt; 0.4%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>News</span>
+                  <span className="text-white">Positive</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         {watchlist.map((item) => {
           const quote = quotes[item.symbol]
           const isSelected = symbol === item.symbol
